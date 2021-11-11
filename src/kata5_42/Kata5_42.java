@@ -1,10 +1,14 @@
 package kata5_42;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Kata5_42 {
 
@@ -13,6 +17,8 @@ public class Kata5_42 {
         kata5.selectAll();
         
         kata5.createTableEmail();
+        
+        kata5.insertMails();
     }
 
     private void selectAll() {
@@ -58,6 +64,30 @@ public class Kata5_42 {
             System.out.println("La tabla no se ha podido crear");
         }
     }
+
+    private void insertMails() {
+        String sql = "INSERT INTO EMAIL(Mail) VALUES(?)";
+        
+        try{
+            MailListReader mailReader = new MailListReader();
+            ArrayList<String> emails = mailReader.read("email.txt");
+            
+            Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            Iterator<String> it = emails.iterator();
+            while(it.hasNext()){
+                pstmt.setString(1,it.next());
+                pstmt.executeUpdate();
+            }
+            
+        }catch(FileNotFoundException e){
+            System.out.println("Error al insertar los emails a la BD");
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
     
     
     
