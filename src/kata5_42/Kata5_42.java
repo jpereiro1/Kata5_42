@@ -11,6 +11,8 @@ public class Kata5_42 {
     public static void main(String[] args) {
         Kata5_42 kata5 = new Kata5_42();
         kata5.selectAll();
+        
+        kata5.createTableEmail();
     }
 
     private void selectAll() {
@@ -41,6 +43,20 @@ public class Kata5_42 {
                     + e.getMessage());
         }
         return conn;
+    }
+
+    private void createTableEmail() {
+        String sql = "CREATE TABLE IF NOT EXISTS EMAIL( "
+                + "Id integer PRIMARY KEY AUTOINCREMENT,"
+                + "Mail text NOT NULL);";
+        
+        try{
+            Connection conn = this.connect();
+            Statement stmt = conn.createStatement();
+            stmt.execute(sql);
+        }catch(SQLException e){
+            System.out.println("La tabla no se ha podido crear");
+        }
     }
     
     
